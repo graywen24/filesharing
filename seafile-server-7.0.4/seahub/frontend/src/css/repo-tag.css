@@ -1,0 +1,94 @@
+.tag-list-container {
+  max-height: 15rem;
+  list-style: none;
+  overflow: auto;
+}
+
+.add-tag-link {
+  display: block;
+  color: #666;
+  padding: .4rem .5rem;
+  border-radius: 4px;
+  text-decoration: underline;
+}
+.add-tag-link:hover {
+  color: #444;
+  background: #eee;
+}
+
+.tag-list-item {
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 0.5rem;
+  height: 2.25rem;
+}
+
+.tag-list-item .tag-demo {
+  flex: 1;
+  border-radius: 0.25rem;
+  display: flex;
+  align-items: center;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.show-tag-selected {
+  width: 0.5rem;
+  align-self: stretch;
+}
+
+.tag-demo .tag-name {
+  flex: 1;
+  padding-left: 0.5rem;
+}
+
+.tag-demo .tag-files {
+  margin-right: 0.5rem;
+  cursor: pointer;
+  border-bottom: 1px solid;
+}
+
+.tag-list-item .tag-edit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 0.5rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.25rem;
+  color: #798d99;
+}
+
+.tag-list-item .tag-edit:hover {
+  color: #092d42;
+  background-color: rgba(9,45,66,.13);
+}
+
+.tag-list-item .tag-operation {
+  position: absolute;
+  right: 0.5rem;
+}
+
+.file-tag-item {
+  margin: 0.25rem 0;
+  padding: 0 0.5rem;
+  width: max-content;
+  cursor: pointer;
+  background-color: #eee;
+  border-radius: 1rem;
+}
+
+.file-tag-item:hover {
+  background-color: #bbb;
+}
+
+.tag-dialog-back {
+  color: #888;
+  cursor: pointer;
+  margin-right: 10px;
+}
+.tag-dialog-back:hover,
+.tag-dialog-back:focus {
+  color: #444;
+}

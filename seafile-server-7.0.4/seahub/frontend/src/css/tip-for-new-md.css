@@ -1,0 +1,23 @@
+.tip-for-new-file {
+  margin: 0 auto;
+  padding: 5em 8em; 
+  align-self: flex-start; /* for repo wiki mode */
+}
+.big-new-file-button {
+  padding: .9em 2em 1em; 
+  border-radius: 8px; 
+  margin: 0 1.5em 1.5em 0;
+  cursor: pointer;
+  width: 160px;
+}
+.big-new-file-button:hover,
+.big-new-file-button:focus {
+  border-color: #eb9205;
+  color: #eb8205;
+}
+.tip-for-new-file p {
+  color: #c4c4c4;
+}
+.big-new-file-button-group {
+  margin: 0 auto;
+}

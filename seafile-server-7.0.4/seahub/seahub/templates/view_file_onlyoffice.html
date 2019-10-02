@@ -1,0 +1,51 @@
+{% load seahub_tags i18n staticfiles %}
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>{{doc_title}}</title>
+<link rel="icon" href="{{ MEDIA_URL }}{{ favicon_path }}" />
+<style type="text/css">
+html, body { padding:0; margin:0; height:100%; }
+</style>
+</head>
+
+<body>
+
+<div id="placeholder"></div>
+
+{% get_current_language as LANGUAGE_CODE %}
+<script type="text/javascript" src="{% static "scripts/lib/jquery.min.js" %}"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/jq.min.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/base.js?t=1536127546642"></script>
+<script type="text/javascript" src="{{ ONLYOFFICE_APIJS_URL }}"></script>
+<script type="text/javascript">
+    var config = {
+        "type": window.screen.width < 992 ? 'mobile' : 'desktop',
+        "document": {
+            "fileType": "{{ file_type }}",
+            "key": "{{ doc_key }}",
+            "title": "{{ doc_title|escapejs }}",
+            "url": "{{ doc_url }}",
+            "permissions": {
+                "download": {% if can_download %}true{% else %}false{% endif %},
+                "edit": {% if can_edit %}true{% else %}false{% endif %},
+                "print": {% if can_download %}true{% else %}false{% endif %},
+                "review": true
+            }
+        },
+        "documentType": "{{ document_type }}", // 'text' | 'spreadsheet' | 'presentation',
+        "editorConfig": {
+            "callbackUrl": "{{ callback_url }}",
+            "lang": "{{ LANGUAGE_CODE }}",
+            "mode": {% if can_edit %}"edit"{% else %}"view"{% endif %},
+            "user": {
+                "name": "{{ username|email2nickname|escapejs }}"
+            }
+        }
+    };
+    var docEditor = new DocsAPI.DocEditor("placeholder", config);
+</script>
+{% include 'snippets/wopi_onlyoffice_js.html' %}
+</body>
+</html>
