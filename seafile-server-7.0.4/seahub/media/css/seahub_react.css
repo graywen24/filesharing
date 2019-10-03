@@ -107,7 +107,7 @@ body { overflow-y: auto; }
 dl { margin:1.5em 0; }
 dt { color:#666; margin:24px 0 2px; font-weight:normal; }
 dd { margin-bottom:.8em; color:#222; }
-a { color:#eb8205; }
+a { color:#d03284; }
 a:hover { color:#eb8205; }
 .vam { vertical-align:middle; }
 .flex-auto { flex:auto; }
@@ -335,7 +335,7 @@ ul,ol,li {
 }
 
 .op-icon {
-    color: #f19645;
+    color: #d43f88;
 }
 
 .op-icon:focus,
@@ -538,11 +538,11 @@ ul,ol,li {
 }
 
 .nav-pills .nav-item .nav-link:hover {
-    background-color: #feefb8;
+    background-color: #d0328430;
 }
 
 .nav-pills .nav-item .nav-link.active {
-    background-color: #feac74;
+    background-color: #fe749a;
     color: #fff;
     border: none;
 }
