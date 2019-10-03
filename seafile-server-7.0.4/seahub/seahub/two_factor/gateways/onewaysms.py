@@ -10,8 +10,8 @@ logger = logging.getLogger(__name__)
 
 class Onewaysms(object):
     """
-    apiusername=API79OLFWW2JC
-    apipassword=API79OLFWW2JCTKH77
+    apiusername=sss
+    apipassword=sss
     mobileno=device.number
     senderid=1-Net_SG
     languagetype=1 for  en
@@ -26,8 +26,8 @@ class Onewaysms(object):
         values = {
             'mobileno': device.number,
             'message': messagecontent,
-            'apiusername':'API79OLFWW2JC',
-            'apipassword':'API79OLFWW2JCTKH77',
+            'apiusername':'ssss',
+            'apipassword':'sss',
             'senderid':'1- Net_SG',
             'languagetype':'1'
         }
