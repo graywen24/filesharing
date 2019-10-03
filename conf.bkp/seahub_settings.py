@@ -30,11 +30,11 @@ ENABLE_TOW_FACTOR_AUTH = True
 #TWO_FACTOR_SMS_GATEWAY = 'seahub.two_factor.gateways.twilio.gateway.Twilio'
 TWO_FACTOR_SMS_GATEWAY = 'seahub.two_factor.gateways.fake.Fake'
 
-TWILIO_ACCOUNT_SID = 'ACb58c25452f1262693f869469567776b1'
+TWILIO_ACCOUNT_SID = ''
 
-TWILIO_AUTH_TOKEN = 'fecafac897bcff2ad64f2b1459cf2818'
+TWILIO_AUTH_TOKEN = ''
 
-TWILIO_CALLER_ID = '+12512748580'
+TWILIO_CALLER_ID = '+'
 
 EXTRA_MIDDLEWARE_CLASSES = (
     'seahub.two_factor.gateways.twilio.middleware.ThreadLocals',
