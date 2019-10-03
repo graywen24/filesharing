@@ -27,14 +27,15 @@ TIME_ZONE = 'Etc/UTC'
 FILE_SERVER_ROOT = "http://localhost/seafhttp"
 ENABLE_TOW_FACTOR_AUTH = True
 
+TWO_FACTOR_SMS_GATEWAY = 'seahub.two_factor.gateways.onewaysms.Onewaysms'
 #TWO_FACTOR_SMS_GATEWAY = 'seahub.two_factor.gateways.twilio.gateway.Twilio'
-TWO_FACTOR_SMS_GATEWAY = 'seahub.two_factor.gateways.fake.Fake'
+#TWO_FACTOR_SMS_GATEWAY = 'seahub.two_factor.gateways.fake.Fake'
 
 TWILIO_ACCOUNT_SID = ''
 
 TWILIO_AUTH_TOKEN = ''
 
-TWILIO_CALLER_ID = '+'
+TWILIO_CALLER_ID = '+12512748580'
 
 EXTRA_MIDDLEWARE_CLASSES = (
     'seahub.two_factor.gateways.twilio.middleware.ThreadLocals',
