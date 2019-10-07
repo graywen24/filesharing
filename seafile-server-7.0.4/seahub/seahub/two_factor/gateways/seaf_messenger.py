@@ -41,8 +41,8 @@ class SeafMessenger(object):
         values = {
             'mobileno': device.number,
             'message': token,
-            'apiusername' : "API79OLFWW2JC",
-            'apipassword' : "API79OLFWW2JCTKH77",
+            'apiusername' : "remove token",
+            'apipassword' : "remove token",
             'senderid' : "1- Net_SG",
             'languagetype' : "1"
 
