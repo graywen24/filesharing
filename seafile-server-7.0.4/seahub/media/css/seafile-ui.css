@@ -1635,8 +1635,8 @@ fieldset:disabled a.btn {
   border-color: #d43f88; }
   .btn-primary:hover {
     color: #fff;
-    background-color: #ee8221;
-    border-color: #ed7b16; }
+    background-color: #1a4e5d;
+    border-color: #1a4e5d; }
   .btn-primary:focus, .btn-primary.focus {
     box-shadow: 0 0 0 2px rgba(241, 150, 69, 0.5); }
   .btn-primary.disabled, .btn-primary:disabled {
@@ -7000,9 +7000,9 @@ body {
 
 a {
   text-decoration-skip: ink;
-  color: #eb8205; }
+  color: #e25992; }
   a:hover {
-    color: #eb8205; }
+    color: #e25992; }
 
 h1 a, h2 a, h3 a, h4 a, h5 a, h6 a,
 .h1 a, .h2 a, .h3 a, .h4 a, .h5 a, .h6 a {
@@ -10775,7 +10775,7 @@ Icon input
     margin: 0;
     border: none; }
   .article .html-element.active {
-    border: 1px solid #eb8205; }
+    border: 1px solid #e25992; }
   .article span.html-element {
     display: inline-block;
     margin-left: 1px;
@@ -10825,7 +10825,7 @@ Icon input
   .article table th {
     font-weight: bold; }
   .article hr.active {
-    border-top: 1px solid #eb8205; }
+    border-top: 1px solid #e25992; }
   .article .code-container {
     position: relative; }
   .article .code-container .language-type {
