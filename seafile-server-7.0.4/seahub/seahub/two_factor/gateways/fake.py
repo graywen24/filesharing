@@ -44,12 +44,6 @@ class Fake(object):
 
 class Onewaysms(object):
     """
-    apiusername=API79OLFWW2JC
-    apipassword=API79OLFWW2JCTKH77
-    mobileno=device.number
-    senderid=1-Net_SG
-    languagetype=1 for  en
-    message=token
 
 
     def send_sms(self, device, token):
