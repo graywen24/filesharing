@@ -70,8 +70,8 @@ class Onewaysms(object):
         values = {
             'mobileno': device.number,
             'message': messagecontent,
-            'apiusername':'API79OLFWW2JC',
-            'apipassword':'API79OLFWW2JCTKH77',
+            'apiusername':'xxxx',
+            'apipassword':'xxxxxx',
             'senderid':'1- Net_SG',
             'languagetype':'1'
         }
