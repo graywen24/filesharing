@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block extra_style %}
+<style type="text/css">
+#hd {
+    margin-bottom:15px;
+}
+#intro {
+    font-size:15px;
+}
+</style>
+{% endblock %}
+
+{% block main_panel %}
+<h2 id="hd">Signup and Pricing plans</h2>
+<p id="intro">Seacloud is designed for file sharing and collaboration within teams and organizations. We offer 1GB free storage. Use one of our paid plan for more space.</p>
+<button id="personal" class="signup-btn">Create a personal account</button>
+<button id="org" class="signup-btn">Create an organization account</button>
+
+<div id="plans">
+<h3 class="bold">Personal plans</h3>
+<p>For individuals looking to share their files and collaborate with others. File space usage will be multiplies by the number of shared users.</p>
+<table>
+    <tr>
+        <th width="28%" class="empty-cell"></th>
+        <th width="36%">Free<br /><span class="price">$0/month</span></th>
+        <th width="36%">Professional<br /><span class="price">$10/month</span></th>
+    </tr>
+    <tr>
+        <td class="item">Storage</td>
+        <td>1GB</td>
+        <td>100GB</td>
+    </tr>
+    <tr>
+        <td class="item">Traffic</td>
+        <td>5G/month</td>
+        <td>250G/month</td>
+    </tr>
+    <tr>
+        <td class="item">Number of Groups</td>
+        <td>No limit</td>
+        <td>No limit</td>
+    </tr>
+</table>
+
+<h3 class="bold">Organization plans</h3>
+<p>For organizations looking to share files and collaborate between members and managing permissions. Space usage will not be multiplies by the number of shared users.</p>
+<table>
+    <tr>
+        <th width="28%" class="empty-cell"></th>
+        <th width="36%">Free<br /><span class="price">$0/month</span></th>
+        <th width="36%">Professional<br /><span class="price">$25/month</span></th>
+    </tr>
+    <tr>
+        <td class="item">Storage</td>
+        <td>1GB</td>
+        <td>25GB</td>
+    </tr>
+    <tr>
+        <td class="item">Traffic</td>
+        <td>5G/month</td>
+        <td>100G/month</td>
+    </tr>
+    <tr>
+        <td class="item">Number of Groups</td>
+        <td>No limit</td>
+        <td>No limit</td>
+    </tr>
+    <tr>
+        <td class="item">Number of Users</td>
+        <td>No limit</td>
+        <td>25</td>
+    </tr>
+</table>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+<script type="text/javascript">
+$('#personal').on('click', function() {
+    location.href = "{% url 'registration_register'%}";
+});
+
+$('#org').on('click', function() {
+    location.href = "{% url 'org_register'%}";
+});
+
+$('#plans tr').off();
+</script>
+{% endblock %}

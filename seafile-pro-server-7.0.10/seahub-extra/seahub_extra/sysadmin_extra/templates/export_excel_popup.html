@@ -1,0 +1,10 @@
+{% load i18n %}
+<form id="date-form" method="get" action="{{ export_excel_url }}" class="hide">
+    <h3>{% trans "Choose date" %}</h3>
+    <label>{% trans "Start date" %}</label><br />
+    <input type="text" name="start" class="input" placeholder="yyyy-mm-dd" /><br />
+    <label>{% trans "End date" %}</label><br />
+    <input type="text" name="end" class="input" placeholder="yyyy-mm-dd" /><br />
+    <p class="error hide"></p>
+    <button type="submit" class="submit">{% trans "Submit" %}</button>
+</form>

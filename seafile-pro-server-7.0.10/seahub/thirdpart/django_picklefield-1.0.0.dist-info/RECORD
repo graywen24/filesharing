@@ -1,0 +1,17 @@
+django_picklefield-1.0.0.dist-info/DESCRIPTION.rst,sha256=UilwwyrG9Ezo2elF2d9MEzaSIEypjphsNvYXuHUSe_0,8044
+django_picklefield-1.0.0.dist-info/METADATA,sha256=CiGl794ddWMX6tuOukVtV3YjLrU564b1ryk-m-aBVmY,8731
+django_picklefield-1.0.0.dist-info/RECORD,,
+django_picklefield-1.0.0.dist-info/WHEEL,sha256=5wvfB7GvgZAbKBSE9uX9Zbi6LCL-_KgezgHblXhCRnM,113
+django_picklefield-1.0.0.dist-info/metadata.json,sha256=iVB3u4QZwqEFkI6qKuNt4bg4XntksPcnUjm8O-r27uI,790
+django_picklefield-1.0.0.dist-info/top_level.txt,sha256=Kbivdax8q70ZIZ0EgambIIRTgshrjo48xhZMIvWgrlU,12
+picklefield/__init__.py,sha256=3vOLgSdYH91qfGjABvhCkdA30loxY4KQmatPVOHk6F4,127
+picklefield/compat.py,sha256=1HnFSqip8Tmuo5qWq7tMKkWFAdyWzhMi5ssKifD571U,174
+picklefield/fields.py,sha256=z-chIGS4plx6kMtJsP5-plETLpvOywuHhuFgBAcPIc0,6785
+picklefield/models.py,sha256=47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU,0
+picklefield/tests.py,sha256=ui4TjVTSzF5869k_ZcBXIzAlAubd0W4iV6BI8yCuagk,9633
+django_picklefield-1.0.0.dist-info/INSTALLER,sha256=zuuue4knoyJ-UwPPXg8fezS7VCrXJQrAP7zeNuwvFQg,4
+picklefield/tests.pyc,,
+picklefield/compat.pyc,,
+picklefield/models.pyc,,
+picklefield/fields.pyc,,
+picklefield/__init__.pyc,,

@@ -1,0 +1,35 @@
+{% extends "organizations/org_admin_sidebar.html" %}
+{% load seahub_tags i18n %}
+{% block cur_manage %}tab-cur{% endblock %}
+
+{% block right_panel %}
+<h3 class="hd">{% trans "Info" %}</h3>
+
+<dl>
+    <dt>{% trans "Space Used" %}</dt>
+    <dd>{{storage_usage|seahub_filesizeformat}} {% if storage_quota > 0 %}/ {{storage_quota|seahub_filesizeformat}}{% endif %}</dd>
+
+    {% if ORG_MEMBER_QUOTA_ENABLED %}
+    <dt>{% trans "Active Users" %} / {% trans "Total Users" %} / {% trans "Limits" %}</dt>
+    <dd>
+        {% if active_member_usage %}{{ active_member_usage }}{% else %}--{% endif %}
+        /
+        {% if member_usage %}{{ member_usage }}{% else %}--{% endif %}
+        /
+        {% if member_quota %}{{ member_quota }}{% else %}--{% endif %}
+    </dd>
+    {% else %}
+    <dt>{% trans "Active Users" %} / {% trans "Total Users" %}</dt>
+    <dd>
+        {% if active_member_usage %}{{ active_member_usage }}{% else %}--{% endif %}
+        /
+        {% if member_usage %}{{ member_usage }}{% else %}--{% endif %}
+    </dd>
+    {% endif %}
+    {% if request.user.org_plan_expire %}
+    <dt>{% trans "Expired at" %}</dt>
+    <dd>{{request.user.org_plan_expire|date:"Y-m-d"}}</dd>
+    {% endif %}
+</dl>
+{% endblock %}
+

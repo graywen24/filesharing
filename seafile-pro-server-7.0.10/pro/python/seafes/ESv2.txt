@@ -1,0 +1,70 @@
+## select * from repofiles where filename contains 'test' or content contains 'test'
+
+curl -X POST "$ES_SERVER/repofiles/_search?pretty" -H 'Content-Type: application/json' -d'{
+"fields": ["repo", "path", "filename", "is_dir"], "query": {"bool": {"filter": [{"term": {"repo": "5b831d49-fccf-4786-a75c-9504a53bccdc"}}], "minimum_should_match": 1, "should": [{"match": {"filename": {"minimum_should_match": "-25%", "query": "test"}}}, {"match": {"content": {"minimum_should_match": "-25%", "query": "test"}}}, {"match": {"filename.ngram": {"minimum_should_match": "80%", "query": "test"}}}]}}, "from": 0, "highlight": {"fields": {"content": {"type": "fvh"}}, "post_tags": ["</b>"], "pre_tags": ["<b>"], "require_field_match": true, "encoder": "html"}
+}'
+
+
+## select * from repofiles where repo = '606ec15d-5def-40cd-9854-4c4b736d7e6a'
+
+curl http://localhost:9200/repofiles/_search\?pretty -d '{
+"query" : {
+
+"match": {"repo": "606ec15d-5def-40cd-9854-4c4b736d7e6a"}
+}
+}'
+
+## select * from repofiles where repo = '606ec15d-5def-40cd-9854-4c4b736d7e6a' and is_dir = true
+
+curl http://localhost:9200/repofiles/_search\?pretty -d '{
+    "query": {
+        "filtered": {
+        "query":    { "match_all": {}},
+
+            "filter":   { "term": {
+                "repo": "606ec15d-5def-40cd-9854-4c4b736d7e6a",
+                "is_dir": true
+            }}
+        }
+    }
+}'
+
+## select * from repofiles where repo = '606ec15d-5def-40cd-9854-4c4b736d7e6a' and is_dir = false and filename like 'views'
+
+curl http://localhost:9200/repofiles/_search\?pretty -d '{
+    "query": {
+        "filtered": {
+        "query":    { "match": {"filename": "a_file"}},
+
+            "filter":   { "term": {
+                "repo": "606ec15d-5def-40cd-9854-4c4b736d7e6a"
+            }}
+        }
+    }
+}'
+
+## delete * from repofiles where repo = '606ec15d-5def-40cd-9854-4c4b736d7e6a'
+curl -XDELETE http://localhost:9200/repofiles/_query\?pretty -d '{
+"query" : {
+"term": {"repo": "606ec15d-5def-40cd-9854-4c4b736d7e6a"}
+}
+}'
+
+
+curl -XGET 'thrift://127.0.0.1:9500/repofiles/file/_search?from=0&pretty=true&size=25' -d '{
+"highlight": {"pre_tags": ["<b>"], "encoder": "html", "fields": {"content": {"order": "score"}, "filename": {"order": "score"}}, "post_tags": ["</b>"]},
+"query": {
+    "filtered": {
+        "filter": {"and": [{"terms": {"repo": ["606ec15d-5def-40cd-9854-4c4b736d7e6a", "9986859b-282f-4352-9210-94daebefbb6d"]}}]},
+        "query": {
+            "bool": {
+                "minimum_number_should_match": 1,
+                "should": [{"match": {"filename": {"operator": "or", "query": "dir", "type": "boolean"}}}, {"match": {"content": {"operator": "or", "query": "dir", "type": "boolean"}}}]
+                }
+            }
+        }
+    },
+"size": 25,
+"from": 0,
+"fields": ["repo", "path", "filename", "is_dir"]
+}'

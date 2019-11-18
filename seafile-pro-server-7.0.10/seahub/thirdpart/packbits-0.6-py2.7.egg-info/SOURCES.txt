@@ -1,0 +1,6 @@
+README.rst
+src/packbits.py
+src/packbits.egg-info/PKG-INFO
+src/packbits.egg-info/SOURCES.txt
+src/packbits.egg-info/dependency_links.txt
+src/packbits.egg-info/top_level.txt

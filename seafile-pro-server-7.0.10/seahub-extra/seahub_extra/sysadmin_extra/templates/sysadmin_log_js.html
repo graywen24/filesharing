@@ -1,0 +1,84 @@
+var no_popup = true;
+
+$('.audit-item')
+.on('mouseenter', function() {
+    if (no_popup) {
+        $(this).find('.more-op-icon').removeClass('vh')
+    }
+})
+.on('mouseleave', function() {
+    if (no_popup) {
+        $(this).find('.more-op-icon').addClass('vh')
+    }
+});
+
+$('.more-op-icon').on('click', function(e) {
+    var click_target = e.target;
+
+    $(this).closest('tr.audit-item').find('.more-op-icon').each(function() {
+        var icon = $(this),
+            next = icon.next();
+
+            if (icon.is(click_target)) {
+                if (next.hasClass('hide')) { // no popup
+                    next.closest('td').css({'position': 'relative'});
+                    next.css({
+                        'left': 0,
+                        'top': icon.position().top + icon.height() + 5
+                        });
+                    next.removeClass('hide').addClass('audit-popup');
+                    no_popup = false;
+                } else {
+                    next.removeClass('audit-popup').addClass('hide');
+                    no_popup = true;
+                };
+            } else {
+                if (next.hasClass('audit-popup')) {
+                    next.removeClass('audit-popup').addClass('hide');
+                }
+            }
+    });
+});
+
+function generate_url(base_url, user, repo) {
+    if (user != '') {
+        base_url = base_url + 'email=' + user + '&';
+    }
+    if (repo!= '') {
+        base_url = base_url + 'repo_id=' + repo + '&';
+    }
+
+    return base_url
+}
+
+var base_url = '?',
+    user = {% if user_selected %} '{{ user_selected }}' {% else %} '' {% endif %},
+    repo = {% if repo_selected %} '{{ repo_selected }}' {% else %} '' {% endif %};
+
+$('.audit-select-user').on('click',function(){
+    user = $(this).attr('data-email');
+    location.href = generate_url(base_url, user, repo);
+});
+
+$('.audit-select-repo').on('click',function(){
+    repo =  $(this).attr('data-repo_id');
+    location.href = generate_url(base_url, user, repo);
+});
+
+$('#audit-unselect-user').on('click',function(){
+    location.href = generate_url(base_url, '', repo);
+});
+
+$('#audit-unselect-repo').on('click',function(){
+    location.href = generate_url(base_url, user, '');
+});
+
+$(document).on("click",function(e){
+    var target = e.target;
+
+    if (!no_popup && !$('.more-op-icon, .audit-select-hidden').is(target) && !$('.audit-select-hidden').find('*').is(target)) {
+        $('.audit-select-hidden').removeClass('audit-popup').addClass('hide');
+        $('.more-op-icon').addClass('vh');
+        no_popup = true;
+    }
+});

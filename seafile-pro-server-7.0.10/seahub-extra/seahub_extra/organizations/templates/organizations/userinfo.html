@@ -1,0 +1,288 @@
+{% extends "organizations/org_admin_sidebar.html" %}
+{% load i18n avatar_tags seahub_tags staticfiles %}
+
+{% block nav_useradmin_class %}class="cur"{% endblock %}
+
+{% block extra_style %}
+<style type="text/css">
+#set-quota-form {
+    min-width:255px;
+}
+#left-panel { position:relative; }
+</style>
+{% endblock %}
+
+{% block left_panel %}
+<div class="side-info">
+    <a class="go-back" title="{% trans "Back to user list" %}"  href="{% url 'org_user_admin' %}"><span class="icon-chevron-left"></span></a>
+    <h3 class="hd">{% trans "Profile" %}</h3>
+    {% avatar email 48 %}
+    <dl>
+        <dt>ID</dt>
+        <dd>{{ email }}</dd>
+
+        <dt>{% trans "Name" context "true name" %}</dt>
+        <dd>
+            <span id="nickname">
+                {% if profile and profile.nickname %}
+                {{ profile.nickname }}
+                {% else %}
+                --
+                {% endif %}
+            </span>
+            <span id="set-name" title="{% trans "Edit"%}" class="sf2-icon-edit op-icon"></span>
+        </dd>
+
+        <dt>{% trans "Contact Email" %}</dt>
+        <dd>
+            <span id="contact-email">
+                {% if profile and profile.contact_email %}
+                {{ profile.contact_email }}
+                {% else %}
+                --
+                {% endif %}
+            </span>
+            <span id="set-contact-email" title="{% trans "Edit"%}" class="sf2-icon-edit op-icon"></span>
+        </dd>
+
+        <dt>{% trans "Organization" %}</dt>
+        <dd>{{ org_name }}</dd>
+    </dl>
+
+    <h3 class="hd">{% trans "Space Used" %}</h3>
+    <p>{% trans "Space Used / Quota" %}: {{ quota_usage|seahub_filesizeformat }} {% if quota > 0 %}/ {{ quota|seahub_filesizeformat }} {% endif %}</p>
+    <a href="#" id="set-quota">{% trans "Set Quota" %}</a>
+</div>
+
+<form id="set-name-form" method="post" action="" class="hide">{% csrf_token %}
+    <h3>{% trans "Set user name" %}</h3>
+    <input type="text" name="nickname" class="input" value="" /><br />
+    <p class="error hide"></p>
+    <input type="submit" value="{% trans "Submit" %}" class="submit" />
+</form>
+
+<form id="set-contact-email-form" method="post" action="" class="hide">{% csrf_token %}
+    <h3>{% trans "Set user contact email" %}</h3>
+    <input type="text" name="contact_email" class="input" value="" /><br />
+    <p class="error hide"></p>
+    <input type="submit" value="{% trans "Submit" %}" class="submit" />
+</form>
+
+<form id="set-quota-form" method="post" class="hide">{% csrf_token %}
+    <h3>{% trans "Set quota" %}</h3>
+    <input type="hidden" name="email" value="{{ email }}" />
+    <input type="text" name="quota" class="input" /> MB
+    <p class="tip">{% trans "Tip: 0 means default limit" %}</p>
+    <p class="error hide"></p>
+    <input type="submit" value="{% trans "Submit" %}" class="submit" />
+</form>
+{% endblock %}
+
+{% block right_panel %}
+<div id="tabs" class="tab-tabs">
+    <div class="hd ovhd">
+        <ul class="tab-tabs-nav fleft">
+            <li class="tab"><a href="#owned" class="a">{% trans "Owned Libs" %}</a></li>
+            <li class="tab"><a href="#shared" class="a">{% trans "Shared Libs" %}</a></li>
+        </ul>
+    </div>
+
+    <div id="owned">
+        {% if owned_repos %}
+        <table class="repo-list">
+            <tr>
+                <th width="4%"><!--icon--></th>
+                <th width="35%">{% trans "Name" %}</th>
+                <th width="16%">{% trans "Size"%}</th>
+                <th width="25%">{% trans "Last Update"%}</th>
+                <th width="20%">{% trans "Operations" %}</th>
+            </tr>
+
+            {% for repo in owned_repos %}
+            <tr>
+                {% if repo.encrypted %}
+                <td><img src="{{MEDIA_URL}}img/lib/48/lib-encrypted.png" width="24" title="{% trans "Encrypted"%}" alt="{% trans "library icon" %}" /></td>
+                {% else %}
+                <td><img src="{{MEDIA_URL}}img/lib/48/lib.png" width="24" title="{% trans "Read-Write" %}" alt="{% trans "library icon" %}" /></td>
+                {% endif %}
+                <td>{{ repo.props.name }}</td>
+                <td>{{ repo.size|filesizeformat }}</td>
+                <td>{{ repo.last_modify|translate_seahub_time }}</td>
+                <td>
+                    <a href="#" data-url="{% url "org_repo_delete" repo.id %}" data-target="{{ repo.name }}" class="repo-delete-btn op vh">{% trans "Delete" %}</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <p>{% trans "None" %}</p>
+        {% endif %}
+    </div>
+
+    <div id="shared">
+        {% if in_repos %}
+        <table>
+            <tr>
+                <th width="4%"><!--icon--></th>
+                <th width="30%">{% trans "Name" %}</th>
+                <th width="26%">{% trans "Share From" %}</th>
+                <th width="15%">{% trans "Size"%}</th>
+                <th width="25%">{% trans "Last Update"%}</th>
+            </tr>
+
+            {% for repo in in_repos %}
+            <tr>
+                {% if repo.encrypted %}
+                <td><img src="{{MEDIA_URL}}img/lib/48/lib-encrypted.png" width="24" title="{% trans "Encrypted"%}" alt="{% trans "library icon" %}" /></td>
+                {% elif repo.permission == 'r' %}
+                <td><img src="{{MEDIA_URL}}img/lib/48/lib-readonly.png" width="24" title="{% trans "Read-Only"%}" alt="{% trans "library icon" %}" /></td>
+                {% else %}
+                <td><img src="{{MEDIA_URL}}img/lib/48/lib.png" width="24" title="{% trans "Read-Write" %}" alt="{% trans "library icon" %}" /></td>
+                {% endif %}
+                <td>{{ repo.props.repo_name }}</td>
+                <td>{{ repo.user|email2nickname }}</td>
+                <td>{{ repo.size|filesizeformat }}</td>
+                <td>{{ repo.last_modify|translate_seahub_time }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <p>{% trans "None" %}</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_script %}
+<script type="text/javascript" src="{% static "scripts/lib/jquery-ui.min.js" %}"></script> {# for tabs #}
+<script type="text/javascript">
+$('#tabs').tabs({cookie:{expires:1}});
+
+$('#set-name').on('click', function() {
+    $("#set-name-form").modal({appendTo: "#main"});
+    $('#simplemodal-container').css({'width':'auto', 'height':'auto'});
+});
+$('#set-name-form').on('submit', function() {
+    var nickname = $.trim($('[name="nickname"]', $(this)).val());
+    var $name = $('#nickname');
+    var $error = $('.error', $(this));
+    if (nickname.indexOf('/') != -1) {
+        $error.html("{% trans "Name should not include '/'." %}").show();
+        return false;
+    }
+
+    var $submitBtn = $('[type="submit"]', $(this));
+    disable($submitBtn);
+
+    $.ajax({
+        url: '{% url 'api-v2.1-org-admin-user' org_id email %}',
+        type: 'PUT',
+        dataType: 'json',
+        cache: false,
+        beforeSend: prepareCSRFToken,
+        data: {'name': nickname},
+        success: function(data) {
+            if (nickname == '') {
+                $name.html('--');
+            } else {
+                $name.html(HTMLescape(data['name']));
+            }
+            $.modal.close();
+        },
+        error: function(xhr, textStatus, errorThrown) {
+            var err_msg = prepareAjaxErrorMsg(xhr);
+            $error.html(err_msg).show();
+            enable($submitBtn);
+        }
+    });
+
+    return false;
+});
+
+$('#set-contact-email').on('click', function() {
+    $("#set-contact-email-form").modal({appendTo: "#main"});
+    $('#simplemodal-container').css({'width':'auto', 'height':'auto'});
+});
+$('#set-contact-email-form').on('submit', function() {
+    var $form = $(this);
+    var contact_email = $.trim($('[name="contact_email"]', $form).val());
+    var $contactEmail = $('#contact-email');
+    var $error = $('.error', $form);
+
+    var $submitBtn = $('[type="submit"]', $form);
+    disable($submitBtn);
+
+    $.ajax({
+        url: '{% url 'api-v2.1-org-admin-user' org_id email %}',
+        type: 'PUT',
+        dataType: 'json',
+        cache: false,
+        beforeSend: prepareCSRFToken,
+        data: {'contact_email': contact_email},
+        success: function(data) {
+            if (data['contact_email'] == ''){
+                $contactEmail.html('--');
+            } else {
+                $contactEmail.html(HTMLescape(data['contact_email']));
+            }
+            $.modal.close();
+        },
+        error: function(xhr, textStatus, errorThrown) {
+            var err_msg = prepareAjaxErrorMsg(xhr);
+            $error.html(err_msg).show();
+            enable($submitBtn);
+        }
+    });
+
+    return false;
+});
+
+$('#set-quota').on('click', function() {
+    $("#set-quota-form").modal({appendTo: "#main"});
+    return false;
+});
+
+$('#set-quota-form .submit').on('click', function() {
+    var form = $('#set-quota-form'),
+        form_id = form.attr('id');
+
+    var quota = $('input[name="quota"]', form).val();
+    if (!$.trim(quota)) {
+        apply_form_error(form_id, "{% trans "Quota can not be empty" %}");
+        return false;
+    }
+
+    var sb_btn = $(this);
+    disable(sb_btn);
+    $.ajax({
+        url: '{% url 'org_user_set_quota' email %}',
+        type: 'POST',
+        dataType: 'json',
+        cache: 'false',
+        beforeSend: prepareCSRFToken,
+        data: {
+            'quota': quota
+        },
+        success: function(data) {
+            location.reload(true);
+        },
+        error: function(xhr, textStatus, errorThrown) {
+            if (xhr.responseText) {
+                apply_form_error(form_id, JSON.parse(xhr.responseText).error);
+            } else {
+                apply_form_error(form_id, "{% trans "Failed. Please check the network." %}");
+            }
+            enable(sb_btn);
+        }
+    });
+    return false;
+});
+
+addConfirmTo($('.repo-delete-btn'), {
+    'title': "{% trans "Delete Library" %}",
+    'con': "{% trans "Are you sure you want to delete %s ?" %}",
+    'post': true
+});
+</script>
+{% endblock %}

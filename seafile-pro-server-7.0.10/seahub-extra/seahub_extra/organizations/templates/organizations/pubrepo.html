@@ -1,0 +1,77 @@
+{% extends "pub_base.html" %}
+{% load seahub_tags avatar_tags group_avatar_tags i18n %}
+
+
+{% block cur_lib %}tab-cur{% endblock %}
+
+{% block right_panel %}
+<div class="hd ovhd">
+    <h3 class="fleft">{% trans "Libraries" %}</h3>
+    <button id="repo-create" class="fright"><img src="{{ MEDIA_URL }}img/add.png" alt="" class="add vam" /><span class="vam">{% trans "New Library"%}</span></button>
+</div>
+{% if public_repos %}
+<table>
+    <tr>
+        <th width="4%"></th>
+        <th width="20%">{% trans "Name"%}</th>
+        <th width="33%">{% trans "Description"%}</th>
+        <th width="15%">{% trans "Last Update"%}</th>
+        <th width="15%">{% trans "Share From"%}</th>
+        <th width="13%">{% trans "Operations"%}</th>
+    </tr>
+    {% for repo in public_repos %}
+    <tr>
+        <td>
+          {% if repo.encrypted %}
+            <img src="{{MEDIA_URL}}img/lib/48/lib-encrypted.png" width="24" title="{% trans "Encrypted" %}" alt="{% trans "library icon" %}" />
+          {% else %}
+            {% if repo.user_perm == 'rw' %}
+            <img src="{{MEDIA_URL}}img/lib/48/lib.png" width="24" title="{% trans "Read-Write"%}" alt="{% trans "library icon" %}" />
+            {% else %}
+            <img src="{{MEDIA_URL}}img/lib/48/lib-readonly.png" width="24" title="{% trans "Read-Only"%}" alt="{% trans "library icon" %}" />
+            {% endif %}
+          {% endif %}
+        </td>
+        <td><a href="{{ SITE_ROOT }}#common/lib/{{ repo.repo_id }}/">{{ repo.props.repo_name }}</a></td>
+        <td>{{ repo.props.repo_desc }}</td>
+        <td>{% if repo.props.last_modified %}{{ repo.props.last_modified|translate_seahub_time }}{% else %}--{% endif %}</td>
+        <td>{{ repo.props.user|email2nickname }}</td>
+        <td>
+            {% if show_repo_download_button %}
+            <span data-id="{{ repo.props.repo_id }}" class="icon-cloud-download download-btn op-icon vh" title="{% trans "Download"%}"></span>
+            {% endif %}
+            {% if request.user.org.is_staff or repo.share_from_me %}
+            <span data-href="{% url 'unsetinnerpub' repo.repo_id %}?permission={{ repo.permission }}" class="icon-trash cancel-share op-icon vh" title="{% trans "Unshare" %}"></span>
+            {% endif %}
+
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<div class="empty-tips">
+    <h2 class="alc">{% trans "No public libraries" %}</h2>
+    <p>{% blocktrans %}You can create a public library by clicking the "New Library" button, others can view and download this library.{% endblocktrans %}</p>
+</div>
+{% endif %}
+{% include "snippets/repo_create_form.html" %}
+{% endblock %}
+
+{% block extra_script %}
+<script type="text/javascript">
+$(".download-btn").on('click', function() {
+    window.open('{{ SITE_ROOT }}seafile_access_check/?repo_id=' + $(this).data('id'));
+});
+$(".cancel-share").on('click', function() {
+    location.href = $(this).data('href');
+});
+
+function repoCreateSuccessCallback() {
+    location.reload();
+}
+{% url 'public_repo_create' as repo_create_url %}
+{% with post_url=repo_create_url %}
+    {% include "snippets/repo_create_js.html" %}
+{% endwith %}
+</script>
+{% endblock %}

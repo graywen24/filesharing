@@ -1,0 +1,130 @@
+{% extends "organizations/org_admin_sidebar.html" %}
+{% load seahub_tags i18n %}
+{% block cur_log %}tab-cur{% endblock %}
+
+{% block right_panel %}
+<div class="tabnav ovhd">
+    <ul class="tabnav-tabs fleft">
+        <li class="tabnav-tab"><a href="{% url 'org_log_file_audit' %}">{% trans "File Access" %}</a></li>
+        <li class="tabnav-tab"><a href="{% url 'org_log_file_update' %}">{% trans "File Update" %}</a></li>
+        <li class="tabnav-tab tabnav-tab-cur"><a href="{% url 'org_log_perm_audit' %}">{% trans "Permission" %}</a></li>
+    </ul>
+</div>
+
+{% if events %}
+
+{% with repo_name=events.0.repo.name %}
+{% include 'audit_unselect.html' %}
+{% endwith %}
+
+<table>
+    <thead>
+        <tr>
+            <th width="18%">{% trans "Share From" %}</th>
+            <th width="15%">{% trans "Share To" %}</th>
+            <th width="8%">{% trans "Actions" %}</th>
+            <th width="13%">{% trans "Permission" %}</th>
+            <th width="15%">{% trans "Library" %}</th>
+            <th width="15%">{% trans "Folder" %}</th>
+            <th width="16%">{% trans "Date" %}</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for e in events %}
+        <tr class="audit-item">
+            <td>
+                {% if e.from_user %}
+                {% if e.is_org_from_user %}
+                <a href="{% url 'org_user_info' e.from_user %}">{{ e.from_user|email2nickname}}</a>
+                {% if not user_selected %}
+                <div class="sf-dropdown sf-dropdown-inline">
+                    <span class="more-op-icon sf2-icon-caret-down op-icon vh"></span>
+                    <ul class="sf-dropdown-menu audit-select-hidden hide">
+                        <li><a class="audit-select-user" href="#" data-email="{{ e.from_user }}">{% trans "Only Show"%} <strong>{{ e.from_user|email2nickname }}</strong></a></li>
+                    </ul>
+                </div>
+                {% endif %}
+                {% else %}
+                <span>{{ e.from_user|email2nickname }}</span>
+                {% endif %}
+                {% else %}
+                <span>{% trans "Anonymous User" %}</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if '@' in e.to %}
+                {% if e.is_org_to_user %}
+                <a href="{% url 'org_user_info' e.to %}">{{ e.to }}</a>
+                {% else %}
+                <span>{{ e.to }}</span>
+                {% endif %}
+                {% elif 'all' in e.to %}
+                <a href="{{ SITE_ROOT }}#org/">{% trans "Organization" %}</a>
+                {% elif e.perm_group_name %}
+                <a href="{% url 'org_admin_group_info' e.to %}">{{ e.perm_group_name }}</a>
+                {% else %}
+                {% trans "Deleted" %}
+                {% endif %}
+            </td>
+            <td>
+                {% if 'add' in e.etype %}
+                <span>{% trans "Add" %}</span>
+                {% elif 'modify' in e.etype %}
+                <span>{% trans "Modify" %}</span>
+                {% elif 'delete' in e.etype %}
+                <span>{% trans "Delete" %}</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if e.permission == 'rw' %}
+                <span>{% trans "Read-Write" %}</span>
+                {% elif e.permission == 'r' %}
+                <span>{% trans "Read-Only" %}</span>
+                {% elif e.permission == 'admin' %}
+                <span>{% trans "Admin" %}</span>
+                {% else %}
+                --
+                {% endif %}
+            </td>
+            <td>
+                {% if e.repo.name %}
+                <span>{{ e.repo.name }}</span>
+                {% if not repo_selected %}
+                <div class="sf-dropdown sf-dropdown-inline">
+                    <span class="more-op-icon sf2-icon-caret-down op-icon vh"></span>
+                    <ul class="sf-dropdown-menu audit-select-hidden hide">
+                        <li><a class="audit-select-repo" href="#" data-repo_id="{{ e.repo_id }}">{% trans "Only Show"%} <strong>{{ e.repo.name }}</strong></a></li>
+                    </ul>
+                </div>
+                {% endif %}
+                {% else %}
+                {% trans "Deleted" %}
+                {% endif %}
+            </td>
+            <td>
+                {% if e.folder_name %}
+                <span title="{{ e.file_path }}">{{ e.folder_name }}</span>
+                {% else %}
+                <span>/</span>
+                {% endif %}
+            </td>
+            <td>{{ e.time|date:"Y-m-d G:i:s" }}</td>
+        </tr>
+        {% endfor %}
+	</tbody>
+</table>
+{% include "sysadmin_log_paginator.html" %}
+{% else %}
+<div class="empty-tips">
+    <h2 class="alc">{% trans "No Library Permission Information" %}</h2>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_script %}
+<script type="text/javascript">
+{% include "sysadmin_log_js.html" %}
+</script>
+{% endblock %}

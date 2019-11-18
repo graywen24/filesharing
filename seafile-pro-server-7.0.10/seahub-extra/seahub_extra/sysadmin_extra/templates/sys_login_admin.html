@@ -1,0 +1,53 @@
+{% extends "sysadmin/base.html" %}
+{% load seahub_tags i18n %}
+{% block cur_log %}tab-cur{% endblock %}
+
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/jquery-ui.datepicker.min.css" />
+{% endblock %}
+
+{% block right_panel %}
+<div class="tabnav ovhd">
+    <ul class="tabnav-tabs fleft">
+        <li class="tabnav-tab tabnav-tab-cur"><a href="{% url 'sys_login_admin' %}">{% trans "Login" %}</a></li>
+        <li class="tabnav-tab"><a href="{% url 'sys_log_file_audit' %}">{% trans "File Access" %}</a></li>
+        <li class="tabnav-tab"><a href="{% url 'sys_log_file_update' %}">{% trans "File Update" %}</a></li>
+        <li class="tabnav-tab"><a href="{% url 'sys_log_perm_audit' %}">{% trans "Permission" %}</a></li>
+        <li class="tabnav-tab"><a href="{% url 'sys_log_email_audit' %}">{% trans "Mail Sending" %}</a></li>
+    </ul>
+    {% if logs %}
+    <button id="export-excel" class="fright">{% trans "Export Excel" %}</button>
+    {% endif %}
+</div>
+
+{% if logs %}
+<table>
+  <tr>
+    <th width="35%">{% trans "Name" %}</th>
+    <th width="25%">IP</th>
+    <th width="15%">{% trans "Status" %}</th>
+    <th width="25%">{% trans "Time" %}</th>
+  </tr>
+  {% for log in logs %}
+  <tr>
+    <td><a href="{{ SITE_ROOT }}useradmin/info/{{ log.username }}/">{{ log.username|email2nickname }}</a></td>
+    <td>{{ log.login_ip }}</td>
+    <td>{% if log.login_success %}{% trans "Success" %}{% else %}{% trans "Failed" %}{% endif %}</td>
+    <td>{{ log.login_date|translate_seahub_time }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% url 'sys_login_admin_export_excel' as export_excel_url %}
+{% include "export_excel_popup.html" %}
+{% include "sysadmin_log_paginator.html" %}
+{% else %}
+<p>{% trans "None" %}</p>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_script %}
+{% if logs %}
+{% include "export_excel_js.html" %}
+{% endif %}
+{% endblock %}

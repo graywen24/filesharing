@@ -1,0 +1,40 @@
+{% extends "organizations/org_admin_sidebar.html" %}
+{% load seahub_tags i18n %}
+
+{% block cur_users %}tab-cur{% endblock %}
+
+{% block right_panel %}
+<h3>{% trans "Search User"%}</h3>
+
+<form id="search-user-form" method="get" action=".">
+    <label>{% trans "Email" %}</label><br />
+    <input type="text" name="email" class="input" value="{{email}}" /><br />
+    <input type="submit" value="{% trans "Submit" %}" class="submit" />
+</form>
+<h3>{% trans "Result"%}</h3>
+{% if users %}
+{% with is_admin_page=False%}
+{% include "organizations/org_users_table.html"%}
+{% endwith %}
+{% else %}
+<p>{% trans "No result" %}</p>
+{% endif %}
+
+<div id="activate-msg" class="hide">
+    <p>{% trans "Activating..., please wait" %}</p>
+</div>
+
+{% endblock %}
+
+{% block extra_script %}
+<script type="text/javascript">
+$('#search-user-form').on('submit', function() {
+    if (!$.trim($('[name="email"]', $(this)).val())) {
+        return false;
+    }
+});
+
+{% include "organizations/org_useradmin_js.html"%}
+
+</script>
+{% endblock %}
