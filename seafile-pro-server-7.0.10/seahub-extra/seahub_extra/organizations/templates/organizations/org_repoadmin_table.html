@@ -1,0 +1,36 @@
+{% load seahub_tags i18n %}
+<table class="repo-list">
+    <tr>
+
+        <th width="4%"><!--icon--></th>
+        <th width="31%">{% trans "Name" %}</th>
+        <th width="26%">ID</th>
+        <th width="24%">{% trans "Owner" %}</th>
+        <th width="15%">{% trans "Operations" %}</th>
+    </tr>
+    {% for repo in repos %}
+    <tr>
+        {% if repo.encrypted %}
+        <td><img src="{{MEDIA_URL}}img/lib/48/lib-encrypted.png" width="24" title="{% trans "Encrypted"%}" alt="{% trans "library icon" %}" /></td>
+        {% else %}
+        <td><img src="{{MEDIA_URL}}img/lib/48/lib.png" width="24" title="{% trans "Read-Write"%}" alt="{% trans "library icon" %}" /></td>
+        {% endif %}
+
+        <td>{{ repo.props.name }}</td>
+        <td style="font-size:11px;">{{ repo.id }}</td>
+
+        {% if repo.is_department_repo %}
+        <td><a href="{{ SITE_ROOT }}org/admin/#address-book/groups/{{repo.group_id}}/">{{ repo.owner_name }}</a></td>
+        <td></td>
+        {% else %}
+        <td><a href="{{ SITE_ROOT }}org/useradmin/info/{{ repo.owner|urlencode }}/">{{ repo.owner_name }}</a></td>
+        <td data-id="{{ repo.props.id }}" data-name="{{ repo.props.name }}">
+            <div>
+            <a href="#" data-url="{% url "org_repo_delete" repo.id %}" class="repo-delete-btn op vh" data-target="{{ repo.name }}">{% trans "Delete" %}</a>
+            <a href="#" class="repo-transfer-btn op vh">{% trans "Transfer" %}</a>
+            </div>
+        </td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>

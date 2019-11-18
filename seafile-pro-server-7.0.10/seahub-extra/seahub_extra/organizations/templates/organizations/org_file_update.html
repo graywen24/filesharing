@@ -1,0 +1,94 @@
+{% extends "organizations/org_admin_sidebar.html" %}
+{% load seahub_tags i18n %}
+{% block cur_log %}tab-cur{% endblock %}
+
+{% block right_panel %}
+<div class="tabnav ovhd">
+    <ul class="tabnav-tabs fleft">
+        <li class="tabnav-tab"><a href="{% url 'org_log_file_audit' %}">{% trans "File Access" %}</a></li>
+        <li class="tabnav-tab tabnav-tab-cur"><a href="{% url 'org_log_file_update' %}">{% trans "File Update" %}</a></li>
+        <li class="tabnav-tab"><a href="{% url 'org_log_perm_audit' %}">{% trans "Permission" %}</a></li>
+    </ul>
+</div>
+
+{% if events %}
+
+{% with repo_name=events.0.repo.name %}
+{% include 'audit_unselect.html' %}
+{% endwith %}
+
+<table>
+    <thead>
+        <tr>
+            <th width="25%">{% trans "User" %}</th>
+            <th width="17%">{% trans "Date" %}</th>
+            <th width="25%">{% trans "Library" %}</th>
+            <th width="33%">{% trans "Action" %}</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for e in events %}
+        <tr class="audit-item">
+            <td>
+                {% if e.user %}
+                {% if e.is_org_user %}
+                <a href="{% url 'org_user_info' e.user %}">{{ e.user|email2nickname }}</a>
+                {% if not user_selected %}
+                <div class="sf-dropdown sf-dropdown-inline">
+                    <span class="more-op-icon sf2-icon-caret-down op-icon vh"></span>
+                    <ul class="sf-dropdown-menu audit-select-hidden hide">
+                        <li><a class="audit-select-user" href="#" data-email="{{ e.user }}">{% trans "Only Show"%} <strong>{{ e.user|email2nickname }}</strong></a></li>
+                    </ul>
+                </div>
+                {% endif %}
+                {% else %}
+                <span>{{ e.user|email2nickname }}</span>
+                {% endif %}
+                {% else %}
+                <span>{% trans "Anonymous User" %}</span>
+                {% endif %}
+            </td>
+            <td>{{ e.local_time|date:"Y-m-d G:i:s" }}</td>
+            <td>
+                {% if e.repo.name %}
+                <span>{{ e.repo.name }}</span>
+                {% if not repo_selected %}
+                <div class="sf-dropdown sf-dropdown-inline">
+                    <span class="more-op-icon sf2-icon-caret-down op-icon vh"></span>
+                    <ul class="sf-dropdown-menu audit-select-hidden hide">
+                        <li><a class="audit-select-repo" href="#" data-repo_id="{{ e.repo_id }}">{% trans "Only Show"%} <strong>{{ e.repo.name }}</strong></a></li>
+                    </ul>
+                </div>
+                {% endif %}
+                {% else %}
+                {% trans "Deleted" %}
+                {% endif %}
+            </td>
+            <td>
+                <span>{{ e.file_oper }}</span>
+                {% if not e.repo.encrypted %}
+                <a class="lsch" href="#" data-url="{% url 'repo_history_changes' e.repo_id %}?commit_id={{ e.commit_id }}" data-time="{{ e.time|tsstr_sec }}">{% trans "Details"%}</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% include "sysadmin_log_paginator.html" %}
+
+{% else %}
+<div class="empty-tips">
+    <h2 class="alc">{% trans "No File Update Information" %}</h2>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_script %}
+<script type="text/javascript">
+{% include "sysadmin_log_js.html" %}
+{% include "snippets/list_commit_detail.html" %}
+</script>
+{% endblock %}
+

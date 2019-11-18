@@ -1,0 +1,45 @@
+{% load i18n staticfiles %}
+<script type="text/javascript" src="{% static "scripts/lib/jquery-ui.min.js" %}"></script>
+<script type="text/javascript">
+$.datepicker.setDefaults({
+    hideIfNoPrevNext: true,
+    maxDate: 0, // today (The maximum selectable date)
+    dateFormat: 'yy-mm-dd'
+});
+$("#export-excel").on('click', function() {
+    var $form = $('#date-form');
+    $form.modal({focus:false});
+    $('#simplemodal-container').css({'width':'auto', 'height':'auto'});
+
+    $('.input', $form).datepicker();
+});
+
+$('#date-form').on('submit', function() {
+    var $form = $(this);
+    var start_date = $.trim($('[name="start"]', $form).val()),
+        end_date = $.trim($('[name="end"]', $form).val());
+
+    if (!start_date || !end_date) {
+        return false;
+    }
+
+    // 'date' can be picked from datepicker, also directly input
+    // 'yyyy-mm-dd': 1) datepicker offers this format 2) it is easy to compare
+    var date_pattern = /^(\d{4})\-(0[1-9]|1[012])\-(|0[1-9]|[12]\d|3[01])$/;
+    if (!date_pattern.test(start_date)) {
+        $('.error', $form).html("{% trans "Invalid start date, should be yyyy-mm-dd" %}").removeClass('hide');
+        return false;
+    }
+    if (!date_pattern.test(end_date)) {
+        $('.error', $form).html("{% trans "Invalid end date, should be yyyy-mm-dd" %}").removeClass('hide');
+        return false;
+    }
+
+    if (start_date > end_date) {
+        $('.error', $form).html("{% trans "Start date should be earlier than end date." %}").removeClass('hide');
+        return false;
+    }
+
+    disable($('[type=submit]', $form));
+});
+</script>

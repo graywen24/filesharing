@@ -1,0 +1,51 @@
+{% load seahub_tags i18n %}
+<table>
+    <tr>
+        <th width="30%">{% trans "Name" %}</th>
+        <th width="10%">{% trans "Status" %}</th>
+        <th width="20%">{% trans "Space Used" %}</th>
+        <th width="20%">{% trans "Create At / Last Login" %}</th>
+        <th width="20%">{% trans "Operations" %}</th>
+    </tr>
+
+    {% for user in users %}
+    <tr>
+        <td data="{{user.id}}">
+            <a class="normal" href="{{ SITE_ROOT }}org/useradmin/info/{{ user.email|urlencode }}/">
+                {{ user.name }}
+            </a>
+        </td>
+        <td>
+            <div class="user-status">
+              {% if user.is_active %}
+                <span class="user-status-cur-value">{% trans "Active" %}</span>
+              {% else %}
+                <span class="user-status-cur-value">{% trans "Inactive" %}</span>
+              {% endif %}
+                <span title="{% trans "Edit"%}" class="user-status-edit-icon sf2-icon-edit op-icon vh"></span>
+            </div>
+            <select name="permission" class="user-status-select hide">
+                <option value="1" {%if user.is_active %}selected="selected"{% endif %}>{% trans "Active" %}</option>
+                <option value="0" {%if not user.is_active %}selected="selected"{% endif %}>{% trans "Inactive"%}</option>
+            </select>
+        </td>
+
+        <td>
+            {{ user.self_usage|seahub_filesizeformat }} {% if user.quota > 0 %} / {{ user.quota|seahub_filesizeformat }} {% endif %}
+        </td>
+        <td style="font-size:11px;">
+        {{ user.ctime|tsstr_sec }} / {% if user.last_login %}{{user.last_login|translate_seahub_time}} {% else %} -- {% endif %}
+        </td>
+        <td>
+          {% if not user.is_self %}
+          <a href="#" class="remove-user-btn op vh" data-url="{% url 'org_user_remove' user.id %}" data-target="{{ user.name }}">{% trans "Delete" %}</a>
+          <a href="#" class="reset-user-btn op vh" data-url="{% url 'org_user_reset' user.id %}" data-target="{{ user.name }}">{% trans "ResetPwd" %}</a>
+
+              {% if is_admin_page %}
+              <a href="#" data-url="{% url 'org_user_remove_admin' user.id %}" data-target="{{ user.name }}" class="revoke-admin-btn op vh">{% trans "Revoke Admin" %}</a>
+              {% endif %}
+          {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>

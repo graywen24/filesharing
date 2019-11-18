@@ -1,0 +1,49 @@
+{% extends "organizations/org_admin_sidebar.html" %}
+{% load seahub_tags i18n %}
+{% block cur_groups %}tab-cur{% endblock %}
+
+{% block right_panel %}
+<h3 class="hd">{% trans "All Groups" %}</h3>
+
+{% if groups %}
+<table>
+    <tr>
+        <th width="30%">{% trans "Name" %}</th>
+        <th width="35%">{% trans "Creator" %}</th>
+        <th width="23%">{% trans "Create At" %}</th>
+        <th width="12%">{% trans "Operations" %}</th>
+    </tr>
+    {% for group in groups %}
+    <tr>
+        {% if group.creator_name == 'system admin' %}
+        <td><a href="{{ SITE_ROOT }}org/admin/#address-book/groups/{{group.id}}/">{{ group.props.group_name }}</a></td>
+        <td>--</td>
+        <td>{{ group.props.timestamp|tsstr_sec }}</td>
+        <td></td>
+
+        {% else %}
+        <td><a href="{% url 'org_admin_group_info' group.id %}">{{ group.props.group_name }}</a></td>
+        <td><a href="{% url 'org_user_info' group.creator_name %}">{{ group.creator_name|email2nickname }}</a></td>
+        <td>{{ group.props.timestamp|tsstr_sec }}</td>
+        <td><a href="#" data-url="{% url 'org_group_remove' group.id %}" data-target="{{ group.props.group_name }}" class="group-remove-btn op vh">{% trans "Delete" %}</a></td>
+
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
+
+{% include "snippets/admin_paginator.html" %}
+{% else %}
+<p>{% trans "Empty" %}</p>
+{% endif %}
+{% endblock %}
+
+{% block extra_script %}
+<script type="text/javascript">
+addConfirmTo($('.group-remove-btn'), {
+        'title':'{% trans "Delete Group" %}',
+        'con':'{% trans "Are you sure you want to delete %s ?" %}',
+        'post': true // post request
+});
+</script>
+{% endblock %}

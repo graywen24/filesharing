@@ -1,0 +1,16 @@
+{% load i18n %}
+<div id="audit-unselect-op">
+    {% if user_selected %}
+    <div id="audit-unselect-user" class="audit-unselect-item" title="{% blocktrans %}unselect {{ user_selected }}{% endblocktrans %}">
+        <a href="#" class="no-deco">{{user_selected}}</a>
+        <span>&#10006;</span>
+    </div>
+    {% endif %}
+
+    {% if repo_selected %}
+    <div id="audit-unselect-repo" class="audit-unselect-item" title="{% blocktrans %}unselect {{ repo_name }}{% endblocktrans %}">
+        <a href="#" class="no-deco">{{repo_name}}</a>
+        <span>&#10006;</span>
+    </div>
+    {% endif %}
+</div>

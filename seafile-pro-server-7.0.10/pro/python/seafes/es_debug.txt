@@ -1,0 +1,182 @@
+curl 'http://192.168.99.100:9200/_cat/indices?v'
+curl 'localhost:9200/repofiles/_mapping/?pretty'
+
+curl -X DELETE "192.168.99.100:9200/repofiles"
+curl -X DELETE "localhost:9200/repofiles"
+
+
+------- 5.x
+
+curl -XPOST '192.168.99.100:9200/repofiles/_search?pretty' -d '
+{
+"highlight": {"fields": {"content": {"type": "plain"}}, "encoder": "html", "post_tags": ["</b>"], "require_field_match": true, "pre_tags": ["<b>"]},
+
+"query": {"bool": {"filter": [{"terms": {"repo": ["b423066b-d782-46bd-9a13-f4270300a115"]}}], "minimum_should_match": 1, "should": [{"match": {"filename": {"minimum_should_match": "-25%", "query": "test"}}}, {"match": {"content": {"minimum_should_match": "-25%", "query": "test"}}}, {"match": {"filename.ngram": {"minimum_should_match": "80%", "query": "test"}}}]}},
+
+"_source": {
+"include": ["repo", "path", "filename", "is_dir"]
+},
+
+"from": 0, "size": 25
+}
+'
+
+curl -XPOST '192.168.99.100:9200/repofiles/_search?pretty' -d '
+{"size": 25,
+"highlight": {"fields": {"content": {"type": "fvh"}}, "post_tags": ["</b>"], "pre_tags": ["<b>"], "require_field_match": true, "encoder": "html"},
+"_source": {"include": ["repo", "path", "filename", "is_dir"]}, "from": 0,
+"query": {
+"bool": {
+"filter": [{"terms": {"repo": ["c9815796-0250-4151-90be-69b17187b6a4", "79955d86-6d19-40ee-b8d5-29a20f2c61a5", "62a30ed0-6786-4c8a-a42f-0c351221cf8c", "47cab158-cedf-4f3d-8086-a105572acb6f", "2cfa823e-aa75-4865-8a2e-afce37247794", "3de02a36-62aa-46bc-a649-265f99b503ff", "7d6b3f36-3ce1-45f1-8c82-b9532e3162c7", "72317891-fa5d-426a-8040-d34e0faf2cb4", "25c7b737-0b01-4d7a-ab8b-c0cfcae87db4", "9194bbf9-9d8f-4d4a-aaf9-969b88863bc4", "1501065c-60ed-4f90-9ed2-6a1ccb60e670", "151ed8ca-0ff7-4260-8f64-825f7411ff2a", "6c6d263f-985f-4314-a9ff-7b8dfcfe70b2", "775b6399-221a-4915-96a0-1408c75e5f76", "2b28a888-bde8-41fe-ae81-0a548165bcbe", "b50cac71-cf8c-4c2c-bf86-db14ac58eaa3", "64ce8500-20b3-47bf-ba20-1e2bc6674edf"]}}],
+"minimum_should_match": 1,
+"should": [
+{"match": {"filename": {"minimum_should_match": "-25%", "query": "server"}}},
+{"match": {"content": {"minimum_should_match": "-25%", "query": "server"}}},
+{"match": {"filename.ngram": {"minimum_should_match": "80%", "query": "server"}}}]
+}
+}
+}
+'
+
+curl -XPOST '192.168.99.100:9200/repofiles/_search?pretty' -d'
+{"size": 25, "highlight": {"fields": {"content": {"type": "fvh"}}, "post_tags": ["</b>"], "pre_tags": ["<b>"], "require_field_match": true, "encoder": "html"}, "_source": {"include": ["repo", "path", "filename", "is_dir"]}, "from": 0,
+"query": {
+"bool": {
+"filter": [{"terms": {"repo": ["c9815796-0250-4151-90be-69b17187b6a4", "79955d86-6d19-40ee-b8d5-29a20f2c61a5", "62a30ed0-6786-4c8a-a42f-0c351221cf8c", "47cab158-cedf-4f3d-8086-a105572acb6f", "2cfa823e-aa75-4865-8a2e-afce37247794", "3de02a36-62aa-46bc-a649-265f99b503ff", "7d6b3f36-3ce1-45f1-8c82-b9532e3162c7", "72317891-fa5d-426a-8040-d34e0faf2cb4", "25c7b737-0b01-4d7a-ab8b-c0cfcae87db4", "9194bbf9-9d8f-4d4a-aaf9-969b88863bc4", "1501065c-60ed-4f90-9ed2-6a1ccb60e670", "151ed8ca-0ff7-4260-8f64-825f7411ff2a", "6c6d263f-985f-4314-a9ff-7b8dfcfe70b2", "775b6399-221a-4915-96a0-1408c75e5f76", "2b28a888-bde8-41fe-ae81-0a548165bcbe", "b50cac71-cf8c-4c2c-bf86-db14ac58eaa3", "64ce8500-20b3-47bf-ba20-1e2bc6674edf"]}}, {"terms": {"suffix": ["pdf", "markdown", "md"]}}],
+"minimum_should_match": 1,
+"should": [{"match": {"filename": {"minimum_should_match": "-25%", "query": "test"}}}, {"match": {"content": {"minimum_should_match": "-25%", "query": "test"}}}, {"match": {"filename.ngram": {"minimum_should_match": "80%", "query": "test"}}}]
+}}}'
+
+curl -XPOST '192.168.99.100:9200/repofiles/_search?pretty' -d'
+{"size": 25, "highlight": {"fields": {"content": {"type": "fvh"}}, "post_tags": ["</b>"], "pre_tags": ["<b>"], "require_field_match": true, "encoder": "html"}, "_source": {"include": ["repo", "path", "filename", "is_dir"]}, "from": 0, "query": {
+"bool": {
+"filter": [{"terms": {"repo": ["c9815796-0250-4151-90be-69b17187b6a4", "79955d86-6d19-40ee-b8d5-29a20f2c61a5", "62a30ed0-6786-4c8a-a42f-0c351221cf8c", "47cab158-cedf-4f3d-8086-a105572acb6f", "2cfa823e-aa75-4865-8a2e-afce37247794", "3de02a36-62aa-46bc-a649-265f99b503ff", "7d6b3f36-3ce1-45f1-8c82-b9532e3162c7", "72317891-fa5d-426a-8040-d34e0faf2cb4", "25c7b737-0b01-4d7a-ab8b-c0cfcae87db4", "9194bbf9-9d8f-4d4a-aaf9-969b88863bc4", "1501065c-60ed-4f90-9ed2-6a1ccb60e670", "151ed8ca-0ff7-4260-8f64-825f7411ff2a", "6c6d263f-985f-4314-a9ff-7b8dfcfe70b2", "775b6399-221a-4915-96a0-1408c75e5f76", "2b28a888-bde8-41fe-ae81-0a548165bcbe", "b50cac71-cf8c-4c2c-bf86-db14ac58eaa3", "64ce8500-20b3-47bf-ba20-1e2bc6674edf"]}}, {"terms": {"suffix": ["pdf", "markdown", "md"]}}, {"range": {"mtime": {"gte": "1543622400", "lte": "1543795199"}}}, {"range": {"size": {"gte": "0", "lte": "1000000"}}}],
+"minimum_should_match": 1,
+"should": [{"match": {"filename": {"minimum_should_match": "-25%", "query": "test"}}}, {"match": {"content": {"minimum_should_match": "-25%", "query": "test"}}}, {"match": {"filename.ngram": {"minimum_should_match": "80%", "query": "test"}}}]}}}'
+
+{
+  "took" : 60,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 1,
+    "max_score" : 0.26025128,
+    "hits" : [
+      {
+        "_index" : "repofiles",
+        "_type" : "file",
+        "_id" : "73928215-8561-4d05-977f-bcfd19680c39/RFC 6455 - The WebSocket Protocol.pdf",
+        "_score" : 0.26025128,
+        "_source" : {
+          "path" : "/RFC 6455 - The WebSocket Protocol.pdf",
+          "filename" : "RFC 6455 - The WebSocket Protocol.pdf",
+          "is_dir" : false,
+          "repo" : "73928215-8561-4d05-977f-bcfd19680c39"
+        },
+        "highlight" : {
+          "content" : [
+            " HTTP, as it is not possible to exhaustively\ndiscover and <b>test</b> that each nonconformant intermediary does"
+          ]
+        }
+      }
+    ]
+  }
+}
+
+{u'hits': {u'hits':
+
+[{u'_type': u'file', u'_source': {u'repo': u'73928215-8561-4d05-977f-bcfd19680c39', u'path': u'/RFC 6455 - The WebSocket Protocol.pdf', u'is_dir': False, u'filename': u'RFC 6455 - The WebSocket Protocol.pdf'}, u'_score': 0.26025128, u'_index': u'repofiles', u'highlight': {u'content': [u' HTTP, as it is not possible to exhaustively\ndiscover and <b>test</b> that each nonconformant intermediary does']}, u'_id': u'73928215-8561-4d05-977f-bcfd19680c39/RFC 6455 - The WebSocket Protocol.pdf'}]
+
+, u'total': 1, u'max_score': 0.26025128}, u'_shards': {u'successful': 5, u'failed': 0, u'skipped': 0, u'total': 5}, u'took': 64, u'timed_out': False}
+
+------------ 2.x
+
+curl -XPOST 'dev2.seafile.com:9200/repofiles/_search?pretty' -d '
+{
+"highlight": {"fields": {"content": {}, "filename.ngram": {}, "filename": {}}, "encoder": "html", "post_tags": ["</b>"], "require_field_match": true, "pre_tags": ["<b>"]},
+
+"query": {"bool": {"filter": [{"term": {"repo": "2e6df407-1e92-4826-921b-e9419cf11478"}}], "minimum_should_match": 1, "should": [{"match": {"filename": {"minimum_should_match": "-25%", "query": "test", "analyzer": "ik_smart"}}}, {"match": {"content": {"minimum_should_match": "-25%", "query": "test", "analyzer": "ik_smart"}}}]}},
+
+"fields": ["repo", "path", "filename", "is_dir"],
+
+"from": 0, "size": 25}
+'
+
+{
+  "took" : 8,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 2,
+    "max_score" : 0.20440722,
+    "hits" : [ {
+      "_index" : "repofiles",
+      "_type" : "file",
+      "_id" : "2e6df407-1e92-4826-921b-e9419cf11478/环境搭建/Docker Dev/docker开发环境.md",
+      "_score" : 0.20440722,
+      "fields" : {
+        "path" : [ "/环境搭建/Docker Dev/docker开发环境.md" ],
+        "filename" : [ "docker开发环境.md" ],
+        "is_dir" : [ false ],
+        "repo" : [ "2e6df407-1e92-4826-921b-e9419cf11478" ]
+      },
+      "highlight" : {
+        "content" : [ "## Seafile Pro Dev\n\n### Use Seafile Dev Image\n\n* Prepare dev folder\n\n\n```\n$ mkdir ~&#x2F;dev_docker_<b>test</b>", "\n$ cd ~&#x2F;dev_docker_<b>test</b>\n\n```\n\n* pull image\n\n\n```\nscp 192.168.1.140:~&#x2F;data&#x2F;docker-registry", "  up pro`\n\n```\nxiez:dev_docker_<b>test</b> xiez$ docker ps\nCONTAINER ID        IMAGE", ", create superuser\n\n```\nxiez:dev_docker_<b>test</b> xiez$ docker exec -i -t seafile-dev-pro  &#x2F;bin&#x2F;bash", " structure\n\n\n```\ncd ~&#x2F;dev_docker_<b>test</b>\nmkdir build\ncd build&#x2F;\n\n```\n\n* Clone seafile-docker &amp; libsearpc" ]
+      }
+    }, {
+      "_index" : "repofiles",
+      "_type" : "file",
+      "_id" : "2e6df407-1e92-4826-921b-e9419cf11478/环境搭建/Docker Dev/低效点.md",
+      "_score" : 0.15451734,
+      "fields" : {
+        "path" : [ "/环境搭建/Docker Dev/低效点.md" ],
+        "filename" : [ "低效点.md" ],
+        "is_dir" : [ false ],
+        "repo" : [ "2e6df407-1e92-4826-921b-e9419cf11478" ]
+      },
+      "highlight" : {
+        "content" : [ "开发\n\n  底层基于6.2.13-pro 开发新的RPC，制作一份新的镜像 6.2.13-pro-<b>test</b>；seahub这边下载镜像，增加新的API，更新镜像；前端下载镜像，开发功能。功能开发完毕后，可以删除镜像，也可以保留。\n\n\n- 搭建开发环境\n\n  只要下载镜像，启动镜像，不超过5分钟\n\n\n" ]
+      }
+    } ]
+  }
+}
+
+{u'hits': {u'hits': [{u'_type': u'file', u'_index': u'repofiles', u'_score': 0.20440722, u'fields': {u'repo': [u'2e6df407-1e92-4826-921b-e9419cf11478'], u'path': [u'/\u73af\u5883\u642d\u5efa/Docker Dev/docker\u5f00\u53d1\u73af\u5883.md'], u'is_dir': [False], u'filename': [u'docker\u5f00\u53d1\u73af\u5883.md']}, u'highlight': {u'content': [u'## Seafile Pro Dev\n\n### Use Seafile Dev Image\n\n* Prepare dev folder\n\n\n```\n$ mkdir ~&#x2F;dev_docker_<b>test</b>', u'\n$ cd ~&#x2F;dev_docker_<b>test</b>\n\n```\n\n* pull image\n\n\n```\nscp 192.168.1.140:~&#x2F;data&#x2F;docker-registry', u'  up pro`\n\n```\nxiez:dev_docker_<b>test</b> xiez$ docker ps\nCONTAINER ID        IMAGE', u', create superuser\n\n```\nxiez:dev_docker_<b>test</b> xiez$ docker exec -i -t seafile-dev-pro  &#x2F;bin&#x2F;bash', u' structure\n\n\n```\ncd ~&#x2F;dev_docker_<b>test</b>\nmkdir build\ncd build&#x2F;\n\n```\n\n* Clone seafile-docker &amp; libsearpc']}, u'_id': u'2e6df407-1e92-4826-921b-e9419cf11478/\u73af\u5883\u642d\u5efa/Docker Dev/docker\u5f00\u53d1\u73af\u5883.md'}, {u'_type': u'file', u'_index': u'repofiles', u'_score': 0.15451734, u'fields': {u'repo': [u'2e6df407-1e92-4826-921b-e9419cf11478'], u'path': [u'/\u73af\u5883\u642d\u5efa/Docker Dev/\u4f4e\u6548\u70b9.md'], u'is_dir': [False], u'filename': [u'\u4f4e\u6548\u70b9.md']}, u'highlight': {u'content': [u'\u5f00\u53d1\n\n  \u5e95\u5c42\u57fa\u4e8e6.2.13-pro \u5f00\u53d1\u65b0\u7684RPC\uff0c\u5236\u4f5c\u4e00\u4efd\u65b0\u7684\u955c\u50cf 6.2.13-pro-<b>test</b>\uff1bseahub\u8fd9\u8fb9\u4e0b\u8f7d\u955c\u50cf\uff0c\u589e\u52a0\u65b0\u7684API\uff0c\u66f4\u65b0\u955c\u50cf\uff1b\u524d\u7aef\u4e0b\u8f7d\u955c\u50cf\uff0c\u5f00\u53d1\u529f\u80fd\u3002\u529f\u80fd\u5f00\u53d1\u5b8c\u6bd5\u540e\uff0c\u53ef\u4ee5\u5220\u9664\u955c\u50cf\uff0c\u4e5f\u53ef\u4ee5\u4fdd\u7559\u3002\n\n\n- \u642d\u5efa\u5f00\u53d1\u73af\u5883\n\n  \u53ea\u8981\u4e0b\u8f7d\u955c\u50cf\uff0c\u542f\u52a8\u955c\u50cf\uff0c\u4e0d\u8d85\u8fc75\u5206\u949f\n\n\n']}, u'_id': u'2e6df407-1e92-4826-921b-e9419cf11478/\u73af\u5883\u642d\u5efa/Docker Dev/\u4f4e\u6548\u70b9.md'}], u'total': 2, u'max_score': 0.20440722}, u'_shards': {u'successful': 5, u'failed': 0, u'total': 5}, u'took': 16, u'timed_out': False}
+
+
+# List all items in a repo
+curl -XPOST '192.168.99.100:9200/repofiles/_search?pretty' -d '
+{
+"query": {
+"bool": {
+"filter":[{"terms": {"repo": ["2cfa823e-aa75-4865-8a2e-afce37247794"]}}]
+}},
+"_source": {
+"include": ["repo", "path", "filename", "is_dir"]
+}
+}
+'
+
+# List all items in a repo starts with '/dir_xxx/'
+# select * from repofiles where repo='2cfa823e-aa75-4865-8a2e-afce37247794' and
+# path like '/dir_xxx/%'
+curl -XPOST '192.168.99.100:9200/repofiles/_search?pretty' -d '
+{
+"query": {
+"bool": {
+"must":[
+{"terms": {"repo": ["2cfa823e-aa75-4865-8a2e-afce37247794"]}},
+{"prefix": {"path": "/dir"}}
+]
+}}
+}
+'

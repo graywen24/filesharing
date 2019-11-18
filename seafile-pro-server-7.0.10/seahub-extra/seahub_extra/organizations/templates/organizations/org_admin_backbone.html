@@ -1,0 +1,98 @@
+{% load staticfiles i18n %}
+{% load compress %}
+{% load seahub_tags avatar_tags %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+<title>{{ site_title }}</title>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="{% trans "File Collaboration Team Organization" %}" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<link rel="shortcut icon" href="{{ MEDIA_URL }}{{ favicon_path }}" />
+
+{% compress css %}
+<link rel="stylesheet" type="text/css" href="{% static "css/bootstrap.min.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{% static "css/select2-3.5.2.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/seahub.css?t=1398068110" />
+{% endcompress %}
+
+{% if branding_css != '' %}<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}{{ branding_css }}" />{% endif %}
+{% if enable_branding_css %}<link rel="stylesheet" type="text/css" href="{% url 'custom_css' %}" />{% endif %}
+</head>
+
+<body>
+    <div id="wrapper" role="application" class="{{ LANGUAGE_CODE }} d-flex fd-col h100">
+        {% block info_bar_message %}
+        {% if request.user.is_authenticated and request.cur_note %}
+        <div id="info-bar">
+            <p id="info-bar-info">{{ request.cur_note.message|urlize|url_target_blank }}</p>
+            <span class="close sf2-icon-x1 op-icon" title="{% trans "Close" %}"></span>
+        </div>
+        {% endif %}
+        {% endblock info_bar_message %}
+
+        <div id="header" role="banner" class="d-flex">
+            <a href="{{ SITE_ROOT }}" id="logo" class="hidden-sm-down">
+                {% if seacloud_mode %}
+                <img src="{{ MEDIA_URL }}img/seacloud_logo.png?t=1398068110" title="Seacloud" alt="logo" width="186" height="31" />
+                {% else %}
+                <img src="{{ MEDIA_URL }}{{ logo_path }}" title="{{ site_title }}" alt="logo" width="{{logo_width}}" height="{{logo_height}}" />
+                {% endif %}
+            </a>
+            <span class="sf2-icon-menu side-nav-toggle hidden-md-up" title="{% trans "Side Nav Menu" %}" id="js-toggle-side-nav" aria-label="{% trans "Side Nav Menu" %}"></span>
+
+            <div id="account">
+                <a id="my-info" href="#" class="account-toggle no-deco hidden-sm-down" aria-label="{% trans "View profile and more" %}">
+                    {% avatar request.user 36 %} <span class="icon-caret-down vam"></span>
+                </a>
+                <span class="account-toggle sf2-icon-more mobile-icon hidden-md-up" aria-label="{% trans "View profile and more" %}"></span>
+            </div>
+        </div>
+
+        <div id="main" class="container-fluid w100 flex-auto ovhd d-flex">
+            <span class="loading-icon loading-tip" id="initial-loading"></span>
+            <div class="row flex-1 d-flex hide">
+                <div class="side-nav side-tabnav col-md-3" id="side-nav" role="navigation"></div>
+                <div id="right-panel" class="col-md-9 ov-auto flex-1"></div>
+            </div>
+
+            <div id="confirm-popup" class="hide">
+                <div id="confirm-con"></div>
+                <button id="confirm-yes">{% trans "Yes"%}</button>
+                <button class="simplemodal-close">{% trans "No"%}</button>
+            </div>
+        </div>
+
+    </div><!-- wrapper -->
+
+{% include 'js/orgadmin-templates.html' %}
+{% include 'js/admin-common-templates.html' %} {# for sys admin & org admin #}
+
+<script type="text/javascript">
+var app = {
+    config: {
+        mediaUrl: '{{ MEDIA_URL }}',
+        siteRoot: '{{ SITE_ROOT }}',
+        loginUrl: '{{ LOGIN_URL }}',
+        csrfCookieName: '{{ CSRF_COOKIE_NAME }}'
+    }
+};
+app["pageOptions"] = {
+    org_id: '{{request.user.org.org_id}}',
+    csrfToken: "{{ csrf_token }}",
+    email: "{{request.user.username}}",
+    name: "{{request.user.username|email2nickname|escapejs}}",
+    contact_email: "{{request.user.username|email2contact_email|escapejs}}",
+    language_code: "{{ LANGUAGE_CODE }}",
+    cur_note: {% if request.cur_note %} {'id': '{{ request.cur_note.id }}'} {% else %} null {% endif %}
+};
+</script>
+<script src="{{ STATIC_URL }}scripts/i18n/{{ LANGUAGE_CODE }}/djangojs.js"></script>
+{% if debug %}
+<script data-main="{% static "scripts/orgadmin-main.js" %}" src="{% static "scripts/lib/require.js" %}"></script>
+{% else %}
+<script data-main="{% static "scripts/dist/orgadmin-main.js" %}" src="{% static "scripts/lib/require.js" %}"></script>
+{% endif %}
+</body>
+</html>

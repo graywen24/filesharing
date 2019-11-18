@@ -1,0 +1,10 @@
+export PYTHONPATH=/data/github/:/data/github/seahub/thirdpart/:/data/github/seafes/:/data/github/seahub-extra/:/data/github/seahub:$PYTHONPATH
+export PYTHONPATH=/data/github/seafobj:$PYTHONPATH
+
+export SEAHUB_DIR=/data/github/seahub
+export CCNET_CONF_DIR=/data/data/ccnet
+export SEAFILE_CONF_DIR=/data/data/seafile-data
+export EVENTS_CONFIG_FILE=/data/github/seafevents/events.conf
+export INDEX_SLAVE_CONFIG_FILE=/data/github/seafes/index-slaver.conf
+
+python -m seafes.index_worker --loglevel debug --logfile /data/github/index_worker.log start

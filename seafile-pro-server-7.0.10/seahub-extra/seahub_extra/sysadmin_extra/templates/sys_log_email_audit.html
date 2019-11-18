@@ -1,0 +1,71 @@
+{% extends "sysadmin/base.html" %}
+{% load seahub_tags i18n %}
+{% block cur_log %}tab-cur{% endblock %}
+
+{% block right_panel %}
+<div class="tabnav ovhd">
+    <ul class="tabnav-tabs fleft">
+        <li class="tabnav-tab"><a href="{% url 'sys_login_admin' %}">{% trans "Login" %}</a></li>
+        <li class="tabnav-tab"><a href="{% url 'sys_log_file_audit' %}">{% trans "File Access" %}</a></li>
+        <li class="tabnav-tab"><a href="{% url 'sys_log_file_update' %}">{% trans "File Update" %}</a></li>
+        <li class="tabnav-tab"><a href="{% url 'sys_log_perm_audit' %}">{% trans "Permission" %}</a></li>
+        <li class="tabnav-tab  tabnav-tab-cur"><a href="{% url 'sys_log_email_audit' %}">{% trans "Mail Sending" %}</a></li>
+    </ul>
+</div>
+
+{% if emails %}
+<table>
+  <tr>
+    <th width="40%">{% trans "Subject" %}</th>
+    <th width="20%">{% trans "Sent To" %}</th>
+    <th width="10%" title="Queued messages will be sent in the next mail sending cycle.">{% trans "Status" %}</th>
+    <th width="15%">{% trans "Priority" %}</th>
+    <th width="15%">{% trans "Time" %}</th>
+  </tr>
+  {% for email in emails %}
+  <tr>
+    <td ><a href="#" class="js-subject" data-msg="{{email.html_message}}">{{ email.subject }}</a></td>
+    <td>{{ email.to_str }}</td>
+
+    {% if email.success %}
+    <td style="color: green;">{{ email.status_str }}</td>
+    {% elif email.failed %}
+    <td><a class="js-failed" style="color: red;" data-err="{{email.error_msg}}" href="#">{{ email.status_str }}</a></td>
+    {% else %}
+    <td>{{ email.status_str }}</td>
+    {% endif %}
+
+    <td>{{ email.priority_str }}</td>
+    <td>{{ email.created|date:"Y-m-d G:i:s" }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% include "snippets/admin_paginator.html" %}
+
+<div id="popup-msg" class="hide"></div>
+
+{% else %}
+<p>{% trans "None" %}</p>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_script %}
+<script>
+$('.js-subject').on('click', function() {
+    $('#popup-msg').html($(this).data('msg'));
+    $('#popup-msg').modal();
+    $('#simplemodal-container').css({'height':'auto'});
+
+    return false;
+});
+
+$('.js-failed').on('click', function() {
+    $('#popup-msg').html($(this).data('err'));
+    $('#popup-msg').modal();
+    $('#simplemodal-container').css({'height':'auto'});
+
+    return false;
+});
+</script>
+{% endblock %}

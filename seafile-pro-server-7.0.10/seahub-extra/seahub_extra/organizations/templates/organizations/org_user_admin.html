@@ -1,0 +1,144 @@
+{% extends "organizations/org_admin_sidebar.html" %}
+{% load seahub_tags i18n %}
+{% block cur_users %}tab-cur{% endblock %}
+
+{% block left_panel %}{{block.super}}
+<form action="{% url 'org_user_search' %}" method="get" class="side-search-form">
+    <input type="text" name="email" class="input" value="" placeholder="{% trans "Search users..." %}" />
+</form>
+{% endblock %}
+
+{% block right_panel %}
+<div class="tabnav ovhd">
+    <ul class="tabnav-tabs fleft">
+        <li class="tabnav-tab tabnav-tab-cur"><a href="{% url 'org_user_admin' %}">{% trans "All" %}</a></li>
+        <li class="tabnav-tab"><a href="{% url 'org_useradmin_admins' %}">{% trans "Admin" %}</a></li>
+    </ul>
+    <div class="fright">
+        <button id="add-user-btn"><img src="{{ MEDIA_URL }}img/add.png" alt="" class="add vam" /><span class="vam">{% trans "Add user" %}</span></button>
+    </div>
+</div>
+
+<form id="add-user-form" action="" method="post" class="hide">{% csrf_token %}
+    <h3>{% trans "Add user" %}</h3>
+    <label for="id_email">{% trans "Email" %}</label><br />
+    <input type="text" name="email" id="id_email" class="input" /><br />
+    <label for="id_name">{% trans "Name(optional)" %}</label><br />
+    <input type="text" name="name" id="id_name" class="input" /><br />
+
+    <label for="id_password1">{% trans "Password" %}</label>
+    <div class="passwd-wrapper">
+        <input type="password" name="password1" id="id_password1" class="passwd input" />
+        <span title="{% trans "Show" %}" class="icon-eye show-or-hide-password cspt"></span>
+        <span title="{% trans "Generate a random password" %}" class="icon-magic generate-random-password cspt"></span>
+    </div>
+    <label for="id_password2">{% trans "Confirm Password" %}</label><br />
+    <input type="password" name="password2" id="id_password2" class="input" /><br />
+
+    <p class="error hide"></p>
+    <input type="submit" value="{% trans "Submit" %}" class="submit" />
+</form>
+
+{% with is_admin_page=False %}
+{% include "organizations/org_users_table.html"%}
+{% endwith %}
+
+{% include "snippets/admin_paginator.html" %}
+
+<div id="activate-msg" class="hide">
+    <p>{% trans "Activating..., please wait" %}</p>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+<script type="text/javascript">
+{% include "organizations/org_useradmin_js.html"%}
+
+ $('#add-user-form .show-or-hide-password').on('click', function() {
+    var icon = $(this),
+        passwd_input = $('input[name=password1], input[name=password2]', $('#add-user-form'));
+    icon.toggleClass('icon-eye icon-eye-slash');
+    if (icon.hasClass('icon-eye')) {
+        icon.attr('title', "{% trans "Show" %}");
+        passwd_input.prop('type', 'password');
+    } else {
+        icon.attr('title', "{% trans "Hide" %}");
+        passwd_input.prop('type', 'text');
+    }
+});
+$('#add-user-form .generate-random-password').on('click', function() {
+    var form = $('#add-user-form');
+    var random_password = '';
+    var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz0123456789';
+    for (var i = 0; i < 8; i++) {
+        random_password += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    $('input[name=password1], input[name=password2]', form).prop('type', 'text').val(random_password);
+    $('.show-or-hide-password', form)
+    .attr('title', "{% trans "Hide" %}")
+    .removeClass('icon-eye').addClass('icon-eye-slash');
+});
+
+$('#add-user-form').on('submit', function() {
+    var form = $(this),
+        form_id = $(this).attr('id'),
+        email = $.trim(form.children('[name="email"]').val()),
+        name = $.trim(form.children('[name="name"]').val()),
+        pwd1 = $.trim(form.find('[name="password1"]').val()),
+        pwd2 = $.trim(form.children('[name="password2"]').val());
+
+    if (!email) {
+        apply_form_error(form_id, "{% trans "Email cannot be blank" %}");
+        return false;
+    }
+    if (!pwd1) {
+        apply_form_error(form_id, "{% trans "Password cannot be blank" %}");
+        return false;
+    }
+    if (!pwd2) {
+        apply_form_error(form_id, "{% trans "Please enter the password again" %}");
+        return false;
+    }
+    if (pwd1 != pwd2) {
+        apply_form_error(form_id, "{% trans "Passwords do not match" %}");
+        return false;
+    }
+
+    var submit_btn = $(this).find('input[type="submit"]');
+    disable(submit_btn);
+    $.ajax({
+        url: '{% url 'org_user_add' %}',
+        type: 'POST',
+        datatype: 'json',
+        cache: false,
+        beforeSend: prepareCSRFToken,
+        data: {
+            'email': email,
+            'name': name,
+            'password1': pwd1,
+            'password2': pwd2
+        },
+        success: function(data) {
+            if (data['success']) {
+                location.reload(true);
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            if (jqXHR.responseText) {
+                apply_form_error(form_id, JSON.parse(jqXHR.responseText).error);
+            } else {
+                apply_form_error(form_id, "{% trans "Failed. Please check the network." %}");
+            }
+            enable(submit_btn);
+        }
+    });
+    return false;
+});
+
+$('#add-user-btn').on('click', function() {
+    $('#add-user-form').modal();
+    $('#simplemodal-container').css({'width':'auto', 'height':'auto'});
+});
+
+</script>
+{% endblock %}

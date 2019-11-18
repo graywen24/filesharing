@@ -1,0 +1,28 @@
+{% extends "pub_base.html" %}
+{% load seahub_tags group_avatar_tags i18n %}
+
+
+{% block cur_grp %}tab-cur{% endblock %}
+
+{% block right_panel %}
+<h3 class="hd">{% trans "Groups" %}</h3>
+{% if groups %}
+<ul class="group-list">
+    {% for group in groups %}
+    <li class="group ovhd">
+    <a href="{% url 'view_group' group.id %}" class="no-deco pic fleft">{% grp_avatar group.props.id 48 %}</a>
+    <div class="txt fright">
+        <h4><a href="{% url 'view_group' group.id %}">{{ group.props.group_name }}</a></h4>
+        <p><span class="item-name">{% trans "Creator"%}</span>{{ group.props.creator_name }}</p>
+        <p><span class="item-name">{% trans "Time"%}</span>{{ group.props.timestamp|tsstr_sec }}</p>
+    </div>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<div class="empty-tips">
+  <h2 class="alc">{% trans "You are not in any groups" %}</h2>
+  <p>{% blocktrans %}Groups allow multiple people to collaborate on libraries. You can create a group by clicking the "New Group" button.{% endblocktrans %}</p>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,69 @@
+{% load i18n %}
+addConfirmTo($('.remove-user-btn'), {
+    'title':"{% trans "Delete User" %}",
+    'con':"{% trans "Are you sure you want to delete %s ?" %}",
+    'post': true // post request
+
+});
+addConfirmTo($('.reset-user-btn'), {
+    'title':"{% trans "Password Reset" %}",
+    'con':"{% trans "Are you sure you want to reset the password of %s ?" %}",
+    'post': true // post request
+});
+$('.user-status-edit-icon').on('click', function() {
+    $(this).parent().addClass('hide');
+    $(this).parent().next().removeClass('hide'); // show 'user-status-select'
+});
+$('.user-status-select').on('change', function() {
+    var select = $(this),
+        uid = $(this).parent().prev().attr('data'),
+        select_val = select.val(),
+        url = "{{ SITE_ROOT }}org/useradmin/toggle_status/" + uid + "/",
+        data = {'s': select_val};
+
+    if (select_val == 1) {
+        // show activating popup
+        $('#activate-msg').modal();
+        $('#simplemodal-container').css({'height':'auto'});
+    }
+    $.ajax({
+        url: url,
+        type: 'POST',
+        dataType: 'json',
+        data: data,
+        cache: false,
+        beforeSend: prepareCSRFToken,
+        success: function(data) {
+            if (data['email_sent']) {
+                feedback("{% trans "Edit succeeded, an email has been sent." %}", 'success');
+                select.prev().children('.user-status-cur-value').html(select.children('option[value="' +select.val() + '"]').text());
+
+            } else if (data['email_sent'] === false) {
+                feedback("{% trans "Edit succeeded, but failed to send email, please check your email configuration." %}", 'success');
+                select.prev().children('.user-status-cur-value').html(select.children('option[value="' +select.val() + '"]').text());
+            } else {
+                feedback("{% trans "Edit succeeded" %}", 'success');
+                select.prev().children('.user-status-cur-value').html(select.children('option[value="' +select.val() + '"]').text());
+            }
+
+            select.addClass('hide');
+            select.prev().removeClass('hide');
+            $.modal.close();
+        },
+        error: function() {
+            feedback("{% trans "Edit failed." %}", 'error');
+            select.addClass('hide');
+            select.prev().removeClass('hide');
+            $.modal.close();
+        }
+    });
+});
+// select shows, but the user doesn't select a value, or doesn't change the permission, click other place to hide the select
+$(document).on('click', function(e) {
+    var target = e.target || event.srcElement;
+    // target can't be edit-icon
+    if (!$('.user-status-edit-icon, .user-status-select').is(target)) {
+        $('.user-status').removeClass('hide');
+        $('.user-status-select').addClass('hide');
+    }
+});
