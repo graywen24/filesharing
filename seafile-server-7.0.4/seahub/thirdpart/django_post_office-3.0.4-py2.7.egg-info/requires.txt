@@ -1,5 +1,0 @@
-django>=1.8
-jsonfield
-
-[test]
-tox >= 2.3
