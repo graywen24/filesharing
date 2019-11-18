@@ -1,3 +1,0 @@
-[console_scripts]
-psd-tools = psd_tools.__main__:main
-

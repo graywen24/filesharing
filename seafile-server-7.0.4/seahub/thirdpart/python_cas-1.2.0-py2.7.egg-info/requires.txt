@@ -1,3 +1,0 @@
-six
-requests
-lxml>=3.4
