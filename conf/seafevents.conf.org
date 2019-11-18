@@ -1,0 +1,37 @@
+[DATABASE]
+type = mysql
+host = 10.0.0.203
+port = 3306
+username = seafile
+password = seafile
+name = seahub-db-app03
+
+
+
+[AUDIT]
+enabled = false
+
+[INDEX FILES]
+#enabled = true
+enabled = false
+interval = 10m
+
+highlight = fvh
+
+## If true, indexes the contents of office/pdf files while updating search index
+## Note: If you change this option from "false" to "true", then you need to clear the search index and update the index again. See the FAQ for details.
+index_office_pdf = false
+
+[OFFICE CONVERTER]
+enabled = false
+workers = 1
+
+[SEAHUB EMAIL]
+enabled = false
+
+## interval of sending Seahub email. Can be s(seconds), m(minutes), h(hours), d(days)
+interval = 30m
+
+# Enable statistics
+[STATISTICS]
+enabled=false

@@ -1,0 +1,29 @@
+[
+{
+"storage_id": "default_storage",
+"name": "Default Storage",
+"is_default": true,
+"fs": {"backend": "fs", "dir": "/storage/default/seafile-data"},
+"commits": {"backend": "fs", "dir": "/storage/default/seafile-data"},
+"blocks": {"backend": "fs", "dir": "/storage/default/seafile-data"}
+},
+
+{
+"storage_id": "huawei_storage",
+"name": "Huawei Storage",
+"is_default": false,
+"fs": {"backend": "fs", "dir": "/storage/huawei/seafile-data"},
+"commits": {"backend": "fs", "dir": "/storage/huawei/seafile-data"},
+"blocks": {"backend": "fs", "dir": "/storage/huawei/seafile-data"}
+},
+
+{
+"storage_id": "alibaba_storage",
+"name": "Alibaba Storage",
+"is_default": false,
+"fs": {"backend": "fs", "dir": "/storage/alibaba/seafile-data"},
+"commits": {"backend": "fs", "dir": "/storage/alibaba/seafile-data"},
+"blocks": {"backend": "fs", "dir": "/storage/alibaba/seafile-data"}
+}
+
+]
