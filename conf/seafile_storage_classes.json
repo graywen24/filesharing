@@ -9,21 +9,21 @@
 },
 
 {
-"storage_id": "huawei_storage",
-"name": "Huawei Storage",
+"storage_id": "customera_storage",
+"name": "customerA Storage",
 "is_default": false,
-"fs": {"backend": "fs", "dir": "/storage/huawei/seafile-data"},
-"commits": {"backend": "fs", "dir": "/storage/huawei/seafile-data"},
-"blocks": {"backend": "fs", "dir": "/storage/huawei/seafile-data"}
+"fs": {"backend": "fs", "dir": "/storage/customera/seafile-data"},
+"commits": {"backend": "fs", "dir": "/storage/customera/seafile-data"},
+"blocks": {"backend": "fs", "dir": "/storage/customera/seafile-data"}
 },
 
 {
-"storage_id": "alibaba_storage",
-"name": "Alibaba Storage",
+"storage_id": "customerb_storage",
+"name": "customerB Storage",
 "is_default": false,
-"fs": {"backend": "fs", "dir": "/storage/alibaba/seafile-data"},
-"commits": {"backend": "fs", "dir": "/storage/alibaba/seafile-data"},
-"blocks": {"backend": "fs", "dir": "/storage/alibaba/seafile-data"}
+"fs": {"backend": "fs", "dir": "/storage/customerb/seafile-data"},
+"commits": {"backend": "fs", "dir": "/storage/customerb/seafile-data"},
+"blocks": {"backend": "fs", "dir": "/storage/customerb/seafile-data"}
 }
 
 ]
