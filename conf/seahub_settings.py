@@ -46,7 +46,7 @@ ENABLED_ROLE_PERMISSIONS = {
         'can_connect_with_desktop_clients': True,
         'storage_ids': [ 'default_storage' ],
     },
-     'huaweiuser': {
+     'customerauser': {
         'can_add_group': True,
         'can_add_public_repo': True,
         'can_add_repo': True,
@@ -64,9 +64,9 @@ ENABLED_ROLE_PERMISSIONS = {
         'can_use_wiki': False,
         'can_view_org': False,
         #'role_quota': '10g',
-    'storage_ids': [ 'huawei_storage'],
+    'storage_ids': [ 'customera_storage'],
 },
-   'alibabauser': {
+   'customerbuser': {
         'can_add_group': True,
         'can_add_public_repo': True,
         'can_add_repo': True,
@@ -84,7 +84,7 @@ ENABLED_ROLE_PERMISSIONS = {
         'can_use_wiki': False,
         'can_view_org': False,
         #'role_quota': '',
-        'storage_ids': [ 'alibaba_storage'],
+        'storage_ids': [ 'customerb_storage'],
 },
 
 }
