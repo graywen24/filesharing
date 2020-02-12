@@ -3,7 +3,7 @@ python-memcached==1.57
 chardet==3.0.4
 six==1.11.0
 Pillow==4.3.0
-Django==1.11.23
+Django==1.11.28
 django-compressor==2.2
 git+git://github.com/haiwen/django-post_office.git@2312cf240363721f737b5ac8eb86ab8cb255938f#egg=django-post_office
 django-statici18n==1.7.0
